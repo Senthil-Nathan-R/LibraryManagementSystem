@@ -1,0 +1,31 @@
+package Library;
+
+import java.util.Scanner;
+
+public class BorrowBook implements IOOperation{
+	
+	@Override
+	public void oper(Database database,User user) {
+		
+		System.out.println("ENTER BOOK NAME :");
+		Scanner s=new Scanner(System.in);
+		String bookname=s.next();
+		
+		int i=database.getBook(bookname);
+		if(i>-1) {
+			Book book=database.getBook(i);
+			if(book.getBrwcopies()>1){
+				Borrowing borrowing=new Borrowing(book,user);
+				book.setBrwcopies(book.getBrwcopies()-1);
+				database.BorrowBook(borrowing,book,i);
+				System.out.println("YOU MUST RETURN THE BOOK BEFORE 14 DAYS FROM NOW\n"+"EXPIRY DATE:"+borrowing.getFinish()+"\nENJOY!\n");
+			}else {
+				System.out.println("THIS BOOK ISN'T AVAILABLE FOR BORROWING..!\n");
+			}
+		}else {
+			System.out.println("BOOK DOESN'T EXIST..!\n");
+		}
+		user.menu(database, user);
+	}
+
+}
